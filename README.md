@@ -11,6 +11,7 @@ SeAugVAE is a novel unsupervised anomaly detection framework tailored for retina
 This codebase includes:
 
 SeAugVAE/
+
 ├── train.py          # TTraining scripts for unsupervised learning on retinal OCT datasets
 
 ├── inference.py      # Inference scripts for generating semantic-spatial anomaly attention maps that highlight the pixel-wise anomalous regions
