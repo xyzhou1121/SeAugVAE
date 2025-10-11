@@ -12,13 +12,13 @@ This codebase includes:
 
 SeAugVAE/
 
-├── train.py          # TTraining scripts for unsupervised learning on retinal OCT datasets
+├── train.py              #  TTraining scripts for unsupervised learning on retinal OCT datasets
 
-├── inference.py      # Inference scripts for generating semantic-spatial anomaly attention maps that highlight the pixel-wise anomalous regions
+├── inference.py          #  Inference scripts for generating semantic-spatial anomaly attention maps that highlight the pixel-wise anomalous regions
 
-├── network.py        # Network architecture of the proposed SeAugVAE model
+├── network.py            #  Network architecture of the proposed SeAugVAE model
 
-└── README.md         # This file
+└── README.md             #  This file
 
 
 📬 Contact
