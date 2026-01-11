@@ -215,16 +215,18 @@ class ResNet(nn.Module):
         x = self.maxpool(x)
 
         x = self.layer1(x)
+        y1 = x
         x = self.layer2(x)
+        y2 = x
         x = self.layer3(x)
+        y3 = x
         x = self.layer4(x)
-        y = x
+        y4 = x
 
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
-        # x = self.fc(x)
 
-        return x, y
+        return x, y1, y2, y3, y4
 
     def forward(self, x):
         return self._forward_impl(x)
@@ -294,12 +296,12 @@ class SeAugVAE(nn.Module):
         )
 
     def encode(self, x):
-        """
-        Encode input into latent distribution parameters.
-        """
-        h1, y = self.resnetmodel(x)
-        h11 = F.relu(h1)
-        return self.fc21(h11), self.fc22(h11), y
+        h1, y1, y2, y3, y4 = self.resnetmodel(x)
+        h1 = F.relu(h1)
+        y2 = self.ap1(y2)
+        y3 = self.ap1(y3)
+        y = torch.cat((torch.cat((y1, y2), dim=1), y3), dim=1)
+        return self.fc21(h1), self.fc22(h1), y4, y
 
     def calculatescore(self, yy, ormu):
         """Compute weight for each channel."""
@@ -361,20 +363,21 @@ class SeAugVAE(nn.Module):
             weight = torch.zeros((x.size(0), 513))
             std = 30
             disturb = torch.distributions.normal.Normal(0, std)
+
             for mm in range(1, N+1):
                 noise = disturb.sample(x.size()).to(device=x.device)
                 xm = x + noise
-                mu, logvar, y = self.encode(xm)
-                weight = weight + self.in_score(mu, y)
+                mu, logvar, y4, _ = self.encode(xm)
+                weight = weight + self.in_score(mu, y4)
             weight = weight / N
-            mu, logvar, y = self.encode(x)
+            mu, logvar, y4, y = self.encode(x)
             z = self.reparameterize(mu, logvar)
-            return self.decode(z), mu, logvar, y, weight
+            return self.decode(z), mu, logvar, y4, weight, y
 
         else:
-            mu, logvar, y = self.encode(x)
+            mu, logvar, y4, y = self.encode(x)
             z = self.reparameterize(mu, logvar)
-            return self.decode(z), mu, logvar, z
+            return self.decode(z), mu, logvar, z, y
 
 
 class ImageDiscriminator(nn.Module):
@@ -389,10 +392,9 @@ class ImageDiscriminator(nn.Module):
         self.fc = nn.Linear(512, 1)
 
     def forward(self, x):
-        z, y = self.en(x)
+        z, y1, y2, y3, y4 = self.en(x)
         z = self.fc(z)
-        return z, y
-
+        return z, y4
 
 class FeatureDiscriminator(nn.Module):
     """

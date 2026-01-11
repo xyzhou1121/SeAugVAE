@@ -113,7 +113,7 @@ def inference():
         out, mu2, logvar2, feature_maps, weight, y = modelV(data, False)
 
         # Input reconstructed image
-        out_fake, mu2, logvar2, y_fake = modelV(out)
+        out_fake, mu2, logvar2, _, y_fake = modelV(out)
 
         # Compute semantic and spatial anomaly attention maps
         _, masks = get_semantic_maps(feature_maps, weight)

@@ -67,7 +67,7 @@ w_f = 0.5
 def forward_V(input, lam):
     """ Forward propagate through netE and netD
     """
-    fake, mu, logvar, z = modelV(input)
+    fake, mu, logvar, z, _ = modelV(input)
 
     disturb = torch.distributions.normal.Normal(z, lam)
     noise = disturb.sample().to(device=z.device)
@@ -75,7 +75,7 @@ def forward_V(input, lam):
     fake_aug = modelV.decode(fake_noise)
 
     fake_input = fake_aug.detach()
-    mu_aug, logvar_aug, _ = modelV.encode(fake_input)
+    mu_aug, logvar_aug, _, _ = modelV.encode(fake_input)
     fake_z = modelV.reparameterize(mu_aug, logvar_aug)
 
     return fake, mu, logvar, z, fake_z, mu_aug, logvar_aug, fake_aug
@@ -206,15 +206,15 @@ def train(epoch):
 
     # 以batch为单位训练
     for batch_idx, data in enumerate(train_loader):
-        # 读取数据
+
         data = data['image']
         data = data.to(device)
-        # 开始优化参数
+
         lam = 1
         err_v = optimize_params(data, lam)
-        # 累计loss
+
         train_v_loss += err_v.item()
-        # 打印训练过程
+
         rate = (batch_idx + 1) / len(train_loader)
         a = "*" * int(rate * 50)
         b = "." * int((1 - rate) * 50)
