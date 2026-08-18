@@ -20,6 +20,12 @@ SeAugVAE/
 
 └── README.md             #  This file
 
+🧠 Pretrained Model Weights
+
+The pretrained model weights for the Cirrus and Spectralis datasets are publicly available through Baidu Netdisk.
+
+Download: [Baidu Netdisk](https://pan.baidu.com/s/1IChYbmC1tDug2A25cSxN8g?pwd=5qkr 提取码: 5qkr)
+
 The following tables report slice-level performance (mean ± std) on two datasets.
 
 📊 Table 1. Slice-level evaluation performance on Edema dataset
