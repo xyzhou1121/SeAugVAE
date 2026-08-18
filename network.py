@@ -294,6 +294,7 @@ class SeAugVAE(nn.Module):
             BasicTran(32, 32, kernel_size=4, stride=2, padding=1),
             nn.Conv2d(32, 1, kernel_size=1, stride=1, padding=0),
         )
+        self.ap1 = nn.AdaptiveAvgPool2d(56)
 
     def encode(self, x):
         h1, y1, y2, y3, y4 = self.resnetmodel(x)
