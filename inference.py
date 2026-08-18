@@ -116,7 +116,7 @@ def inference():
         out_fake, mu2, logvar2, _, y_fake = modelV(out)
 
         # Compute semantic and spatial anomaly attention maps
-        _, masks = get_semantic_maps(feature_maps, weight)
+        masks = get_semantic_maps(feature_maps, weight)
         spatial_map = get_spatial_maps(y, y_fake)
 
         # Combine anomaly score maps and apply Gaussian smoothing
